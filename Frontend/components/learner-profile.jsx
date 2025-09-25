@@ -7,35 +7,12 @@ import { Button } from "@/components/ui/button"
 import AchievementBadge from "./achievement-badge"
 import ProgressChart from "./progress-chart"
 import Link from "next/link";
-import { useAuth } from "@/lib/auth-context";
-import LoginPrompt from "./login-prompt";
 
 export default function LearnerProfile() {
-  const { isAuthenticated, isLoading, user } = useAuth();
   const [activeTab, setActiveTab] = useState("overview")
 
-  // Show loading state
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-sky-blue"></div>
-      </div>
-    );
-  }
-
-  // Show login prompt if not authenticated
-  if (!isAuthenticated) {
-    return (
-      <LoginPrompt
-        title="Access Your Profile"
-        message="Sign in to view your learning progress, achievements, and personalized dashboard."
-        feature="profile"
-      />
-    );
-  }
-
   const learnerData = {
-    name: user?.fullName || "Learner",
+    name: "Learning Explorer",
     age: 8,
     joinDate: "March 2024",
     totalStars: 47,

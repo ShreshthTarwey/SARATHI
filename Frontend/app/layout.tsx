@@ -4,10 +4,10 @@ import { Fredoka as Fredoka_One, Poppins } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Suspense } from "react";
 import Navigation from "@/components/navigation";
-import { AuthProvider } from "@/lib/auth-context";
+import TawkWidget from "@/components/website-widgets";
 import "./globals.css";
 
-// Import the voice control components
+// 1. ADDED: Import your voice control components
 import { VoiceControlProvider } from "@/context/VoiceControlContext";
 import GlobalVoiceControl from "@/components/GlobalVoiceControl";
 
@@ -30,37 +30,34 @@ export const metadata: Metadata = {
   generator: "v0.app",
 };
 
-// This is the single, correct RootLayout component
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Server-side route protection handled by Next middleware
   return (
     <html lang="en">
       <body
         className={`font-sans ${fredokaOne.variable} ${poppins.variable} antialiased`}
       >
-        <AuthProvider>
-          {/* 1. VoiceControlProvider wraps everything inside the AuthProvider */}
-          <VoiceControlProvider>
-            {/* Your team's existing navigation */}
-            <Navigation />
+        {/* 2. WRAPPED: The VoiceControlProvider now wraps the main application content */}
+        <VoiceControlProvider>
+          {/* Your team's existing code is untouched inside the provider */}
+          <Navigation />
 
-            {/* Your team's existing main content area */}
-            <main className="pt-16 relative z-0">
-              <Suspense fallback={null}>{children}</Suspense>
-            </main>
-            
-            {/* 2. The floating microphone button is placed here */}
-            {/* It's inside the Provider but outside the main content flow */}
-            <GlobalVoiceControl />
-
-          </VoiceControlProvider>
-        </AuthProvider>
-
+          <main className="pt-16 relative z-0">
+            <Suspense fallback={null}>{children}</Suspense>
+          </main>
+          
+          {/* 3. ADDED: The floating microphone button, which will appear on all pages */}
+          <GlobalVoiceControl />
+        </VoiceControlProvider>
+        
+        {/* These components are outside the voice provider, which is perfectly fine */}
         <Analytics />
+        <TawkWidget />
       </body>
     </html>
   );
-}
+} // <-- THIS IS THE MISSING CLOSING BRACE

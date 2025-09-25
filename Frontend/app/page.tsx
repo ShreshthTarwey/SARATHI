@@ -17,22 +17,28 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 
-// 1. ADDED: Import the voice control hook
+// 1. ADDED: Import the hook to access the global voice system
 import { useVoice } from "@/context/VoiceControlContext";
 
 export default function SarathiHomepage() {
   // 2. ADDED: The entire block for voice control logic
   const { setPageSpecificCommands } = useVoice();
+  // Define the voice-controllable sections on this page. These MUST match the `id`s below.
   const homepageSections = ['home', 'features', 'experience', 'intelligence', 'community', 'join'];
+
+  // When this page loads, it tells the global voice system which commands are available.
   useEffect(() => {
     setPageSpecificCommands(homepageSections);
+    // When the page is left, it clears the commands for the next page.
     return () => {
       setPageSpecificCommands([]);
     }
   }, []); 
   // --- End of added voice logic block ---
 
-  // This is your team's existing code
+
+  // --- All of your team's original code starts here and is untouched ---
+
   const [isLoaded, setIsLoaded] = useState(false);
   const [sparkles, setSparkles] = useState<
     Array<{ id: number; x: number; y: number; delay: number }>
@@ -49,6 +55,7 @@ export default function SarathiHomepage() {
     }));
     setSparkles(newSparkles);
 
+    // Parallax scroll effect
     const handleScroll = () => {
       if (parallaxRef.current) {
         const scrolled = window.pageYOffset;
@@ -92,9 +99,10 @@ export default function SarathiHomepage() {
     },
   ];
 
+  // MODIFIED: Added 'id' property to each object for voice navigation
   const parallaxSections = [
     {
-      id: "experience", // 3. KEPT: Your added ID
+      id: "experience",
       title: "Immersive Learning Experience",
       description:
         "Step into a world where education meets innovation. Our platform combines cutting-edge technology with proven pedagogical methods to create learning experiences that are both effective and engaging.",
@@ -107,7 +115,7 @@ export default function SarathiHomepage() {
       ],
     },
     {
-      id: "intelligence", // 3. KEPT: Your added ID
+      id: "intelligence",
       title: "Adaptive Intelligence",
       description:
         "Our AI understands how each learner thinks and adapts in real-time. Every interaction is personalized, ensuring optimal learning outcomes for students of all abilities and learning styles.",
@@ -120,7 +128,7 @@ export default function SarathiHomepage() {
       ],
     },
     {
-      id: "community", // 3. KEPT: Your added ID
+      id: "community",
       title: "Global Community",
       description:
         "Join a worldwide network of learners, educators, and innovators. Share experiences, celebrate achievements, and grow together in an inclusive environment that celebrates diversity.",
@@ -136,6 +144,7 @@ export default function SarathiHomepage() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Animated background elements */}
       <div className="fixed inset-0 pointer-events-none">
         {sparkles.map((sparkle) => (
           <div
@@ -152,11 +161,13 @@ export default function SarathiHomepage() {
         ))}
       </div>
 
-      <section id="home" className="relative min-h-screen flex items-center justify-center px-4 py-20"> {/* 3. KEPT: Your added ID */}
+      {/* Hero Section */}
+      <section id="home" className="relative min-h-screen flex items-center justify-center px-4 py-20">
         <div
           ref={parallaxRef}
           className="absolute inset-0 bg-gradient-to-br from-primary/5 via-accent/5 to-coral-pink/5"
         />
+
         <div className="container mx-auto text-center relative z-10">
           <div
             className={`transition-all duration-1000 ${
@@ -170,11 +181,13 @@ export default function SarathiHomepage() {
               SUPPORTIVE ASSISTIVE REACH FOR ACCESSIBLE <br />
               TEACHING & HOLISTIC INCLUSION
             </h2>
+
             <p className="font-body text-xl md:text-2xl text-foreground/80 max-w-4xl mx-auto mb-12 leading-relaxed">
               Where learning becomes an adventure. Experience the future of
               education with AI-powered personalization, immersive content, and
               a global community of learners.
             </p>
+
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
               <Button
                 size="lg"
@@ -194,6 +207,8 @@ export default function SarathiHomepage() {
             </div>
           </div>
         </div>
+
+        {/* Floating 3D elements */}
         <div className="absolute top-20 left-10 animate-float-3d">
           <div className="w-20 h-20 bg-gradient-purple rounded-2xl opacity-20 rotate-12"></div>
         </div>
@@ -211,7 +226,8 @@ export default function SarathiHomepage() {
         </div>
       </section>
 
-      <section id="features" className="py-20 px-4 relative"> {/* 3. KEPT: Your added ID */}
+      {/* Features Section with Glowing Cards */}
+      <section id="features" className="py-20 px-4 relative">
         <div className="container mx-auto">
           <div className="text-center mb-16">
             <h2 className="font-heading text-5xl font-bold mb-6 text-foreground">
@@ -222,6 +238,7 @@ export default function SarathiHomepage() {
               learning companion
             </p>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
               <Link key={feature.title} href={feature.href}>
@@ -251,14 +268,16 @@ export default function SarathiHomepage() {
         </div>
       </section>
 
+      {/* Parallax Sections */}
       {parallaxSections.map((section, index) => (
-        <section key={index} id={section.id} className="py-20 px-4 relative overflow-hidden"> {/* 3. KEPT: Your added ID */}
+        <section key={index} id={section.id} className="py-20 px-4 relative overflow-hidden">
           <div className="container mx-auto">
             <div
               className={`grid lg:grid-cols-2 gap-16 items-center ${
                 section.reverse ? "lg:grid-flow-col-dense" : ""
               }`}
             >
+              {/* Content */}
               <div
                 className={`space-y-8 ${
                   section.reverse ? "lg:col-start-2" : ""
@@ -270,6 +289,8 @@ export default function SarathiHomepage() {
                 <p className="font-body text-xl text-muted-foreground leading-relaxed">
                   {section.description}
                 </p>
+
+                {/* Stats */}
                 <div className="grid grid-cols-3 gap-6">
                   {section.stats.map((stat, statIndex) => (
                     <div key={statIndex} className="text-center">
@@ -282,6 +303,7 @@ export default function SarathiHomepage() {
                     </div>
                   ))}
                 </div>
+
                 <Button
                   size="lg"
                   className="font-body text-lg px-6 py-3 bg-gradient-to-r from-primary to-accent text-white rounded-full hover-lift"
@@ -291,6 +313,7 @@ export default function SarathiHomepage() {
                 </Button>
               </div>
 
+              {/* Image */}
               <div
                 className={`relative ${
                   section.reverse ? "lg:col-start-1" : ""
@@ -312,7 +335,8 @@ export default function SarathiHomepage() {
         </section>
       ))}
 
-      <section id="join" className="py-20 px-4 relative"> {/* 3. KEPT: Your added ID */}
+      {/* Call to Action */}
+      <section id="join" className="py-20 px-4 relative">
         <div className="container mx-auto text-center">
           <Card className="max-w-4xl mx-auto bg-gradient-cyber border-0 text-white relative overflow-hidden">
             <CardContent className="p-12 relative z-10">
@@ -345,6 +369,8 @@ export default function SarathiHomepage() {
                 </Link>
               </div>
             </CardContent>
+
+            {/* Background animation */}
             <div className="absolute inset-0 opacity-20">
               <div className="absolute top-10 left-10 w-20 h-20 bg-white rounded-full animate-bounce-gentle" />
               <div className="absolute bottom-10 right-10 w-16 h-16 bg-white rounded-full animate-wiggle" />

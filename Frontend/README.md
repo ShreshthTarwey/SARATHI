@@ -21,14 +21,7 @@ This Next.js application is now configured for seamless deployment on Vercel.
    Set these in your Vercel dashboard under Settings > Environment Variables:
    ```
    NEXT_PUBLIC_API_URL=https://your-backend-api.com
-   NEXT_PUBLIC_AUTH_URL=https://your-auth-service.com
    NEXT_PUBLIC_APP_URL=https://your-app.vercel.app
-   NEXT_PUBLIC_FIREBASE_API_KEY=your-firebase-api-key
-   NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-firebase-auth-domain
-   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-firebase-project-id
-   NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-firebase-storage-bucket
-   NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your-firebase-messaging-sender-id
-   NEXT_PUBLIC_FIREBASE_APP_ID=your-firebase-app-id
    ```
 
 3. **Build Configuration:**
@@ -79,7 +72,7 @@ Frontend/
 - Authentication middleware is properly configured for production deployment
 - **CRITICAL**: Removed conflicting `loginF` folder that contained a separate Vite React app
 - Integrated authentication pages directly into the Next.js app structure
-- Added Firebase authentication support with proper environment variable configuration
+- Removed all authentication requirements - all pages are now accessible without login
 
 ### Troubleshooting
 

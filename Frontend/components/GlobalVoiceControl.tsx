@@ -1,4 +1,3 @@
-// components/GlobalVoiceControl.tsx
 "use client";
 
 import { useVoice } from "@/context/VoiceControlContext";
@@ -19,11 +18,14 @@ export default function GlobalVoiceControl() {
     <button
       onClick={handleClick}
       title={status}
-      // This CSS makes it a floating button at the bottom-right
+      // This CSS makes it a floating button at the bottom-center
       style={{
         position: 'fixed',
         bottom: '20px',
-        right: '20px',
+        // --- UPDATED STYLES START HERE ---
+        left: '50%',
+        transform: 'translateX(-50%)',
+        // --- UPDATED STYLES END HERE ---
         zIndex: 1000,
         width: '60px',
         height: '60px',
@@ -42,3 +44,4 @@ export default function GlobalVoiceControl() {
     </button>
   );
 }
+

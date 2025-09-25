@@ -18,9 +18,8 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },
-  // Ensure static export compatibility
-  output: 'standalone',
-  trailingSlash: true,
+  // Remove conflicting output settings for Vercel
+  trailingSlash: false,
 }
 
 export default nextConfig
