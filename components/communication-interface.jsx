@@ -35,17 +35,19 @@ export default function CommunicationInterface() {
       color: "from-emerald-400 via-teal-400 to-cyan-600",
       bgColor: "bg-gradient-to-br from-emerald-50 to-teal-50",
       iconBg: "bg-gradient-to-r from-emerald-400 to-teal-500",
+      link: "https://shivammodi001.github.io/Picture-Communication/ "
     },
     {
       id: "video-messaging",
       title: "Video Messages",
       icon: "📹",
-      description: "Record video messages with automatic captions and accessibility",
+      description: "Talk through your video messages with automatic captions and accessibility",
       longDescription:
         "Create expressive video messages with real-time captions, sign language support, and easy sharing options.",
       color: "from-orange-400 via-red-400 to-pink-600",
       bgColor: "bg-gradient-to-br from-orange-50 to-red-50",
       iconBg: "bg-gradient-to-r from-orange-400 to-red-500",
+      link: "https://webrtc-8flx.onrender.com/"
     },
     {
       id: "live-chat",
@@ -57,6 +59,7 @@ export default function CommunicationInterface() {
       color: "from-violet-400 via-purple-400 to-indigo-600",
       bgColor: "bg-gradient-to-br from-violet-50 to-purple-50",
       iconBg: "bg-gradient-to-r from-violet-400 to-purple-500",
+      link: "https://quickchat.greatstack.in/"
     },
     {
       id: "instant-translation",
