@@ -71,6 +71,7 @@ export default function CommunicationInterface() {
       color: "from-rose-400 via-pink-400 to-red-600",
       bgColor: "bg-gradient-to-br from-rose-50 to-pink-50",
       iconBg: "bg-gradient-to-r from-rose-400 to-pink-500",
+      link: "https://multi-language-translator-nine.vercel.app/"
     },
     {
       id: "symbol-to-speech",
