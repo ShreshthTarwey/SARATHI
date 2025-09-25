@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { Sparkles, Menu, X, User, Settings, LogOut, Bell } from "lucide-react";
-import axios from "axios";
-import { useState } from "react";
+import { useAuth } from "@/lib/auth-context";
+import { useEffect, useState } from "react";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
 
   const navLinks = [
     { href: "/communication", label: "Communication", icon: "💬" },
@@ -34,7 +35,8 @@ export default function Navigation() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="font-body text-gray-700 hover:text-sky-blue transition-all duration-300 hover:scale-105 flex items-center space-x-1 group"
+                className="font-body text-gray-700 hover:text-blue-500 transition-all duration-300 hover:scale-105 flex items-center space-x-1 group"
+                prefetch={true}
               >
                 <span className="group-hover:animate-bounce-gentle text-xl">
                   {link.icon}
@@ -45,18 +47,35 @@ export default function Navigation() {
           </div>
 
           <div className="hidden md:block relative">
-            <button
-              onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="flex items-center space-x-2 p-2 rounded-full bg-gradient-to-r from-coral-pink/20 to-soft-lavender/20 hover:from-coral-pink/30 hover:to-soft-lavender/30 transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-sunny-yellow/50"
-            >
-              <div className="w-8 h-8 bg-gradient-to-r from-sky-blue to-mint-green rounded-full flex items-center justify-center animate-bounce-gentle">
-                <User className="w-5 h-5 text-white" />
+            {isAuthenticated ? (
+              <button
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className="flex items-center space-x-2 p-2 rounded-full bg-gradient-to-r from-pink-200 to-purple-200 hover:from-pink-300 hover:to-purple-300 transition-all duration-300 hover:scale-105 border-2 border-transparent hover:border-yellow-300"
+              >
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-green-500 rounded-full flex items-center justify-center animate-bounce-gentle">
+                  <User className="w-5 h-5 text-white" />
+                </div>
+                <span className="font-body font-medium text-gray-700">
+                  {user?.fullName || "Profile"}
+                </span>
+                <div className="w-2 h-2 bg-pink-500 rounded-full animate-pulse"></div>
+              </button>
+            ) : (
+              <div className="flex items-center space-x-3">
+                <Link
+                  href="/signin"
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/signup"
+                  className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300"
+                >
+                  Sign Up
+                </Link>
               </div>
-              <span className="font-body font-medium text-gray-700">
-                Profile
-              </span>
-              <div className="w-2 h-2 bg-coral-pink rounded-full animate-pulse"></div>
-            </button>
+            )}
 
             {isProfileOpen && (
               <div className="absolute right-0 top-full mt-2 w-64 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border-2 border-sunny-yellow/30 overflow-hidden animate-slide-in-bounce">
@@ -66,9 +85,9 @@ export default function Navigation() {
                       <User className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-heading text-lg font-bold text-gray-800">
-                        Learning Explorer
-                      </h3>
+                    <h3 className="font-heading text-lg font-bold text-gray-800">
+                      {user?.fullName || "Learning Explorer"}
+                    </h3>
                       <p className="font-body text-sm text-gray-600">
                         Ready for adventure! ✨
                       </p>
@@ -120,15 +139,8 @@ export default function Navigation() {
                   <hr className="my-2 border-gray-200" />
 
                   <button
-                    onClick={async () => {
-                      try {
-                        await axios.get("http://localhost:8000/api/auth/signout", { withCredentials: true });
-                        window.location.href = "http://localhost:5173/signin";
-                      } catch (err) {
-                        console.error("Signout failed", err);
-                      }
-                    }}
-                    className="flex items-center space-x-3 p-3 rounded-xl hover:bg-coral-pink/10 transition-all duration-300 group w-full text-left"
+                    onClick={logout}
+                    className="flex items-center space-x-3 p-3 rounded-xl hover:bg-pink-100 transition-all duration-300 group w-full text-left"
                   >
                     <div className="w-8 h-8 bg-coral-pink/20 rounded-full flex items-center justify-center group-hover:animate-wiggle">
                       <LogOut className="w-4 h-4 text-coral-pink" />
@@ -172,30 +184,60 @@ export default function Navigation() {
 
               <hr className="mx-4 border-gray-200" />
 
-              <div className="px-4 space-y-2">
-                <div className="flex items-center space-x-3 py-2">
-                  <div className="w-10 h-10 bg-gradient-to-r from-coral-pink to-soft-lavender rounded-full flex items-center justify-center">
-                    <User className="w-5 h-5 text-white" />
+              {isAuthenticated ? (
+                <div className="px-4 space-y-2">
+                  <div className="flex items-center space-x-3 py-2">
+                    <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center">
+                      <User className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-heading text-lg font-bold text-gray-800">
+                        {user?.fullName || "Learning Explorer"}
+                      </h3>
+                      <p className="font-body text-sm text-gray-600">
+                        Ready for adventure! ✨
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-heading text-lg font-bold text-gray-800">
-                      Learning Explorer
-                    </h3>
-                    <p className="font-body text-sm text-gray-600">
-                      Ready for adventure! ✨
-                    </p>
-                  </div>
-                </div>
 
-                <Link
-                  href="/profile"
-                  className="flex items-center space-x-3 px-2 py-2 text-gray-700 hover:bg-sky-blue/20 rounded-lg transition-all duration-300"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <User className="w-5 h-5 text-sky-blue" />
-                  <span className="font-body font-medium">My Profile</span>
-                </Link>
-              </div>
+                  <Link
+                    href="/profile"
+                    className="flex items-center space-x-3 px-2 py-2 text-gray-700 hover:bg-blue-100 rounded-lg transition-all duration-300"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <User className="w-5 h-5 text-blue-500" />
+                    <span className="font-body font-medium">My Profile</span>
+                  </Link>
+
+                  <button
+                    onClick={() => {
+                      logout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="flex items-center space-x-3 px-2 py-2 text-gray-700 hover:bg-pink-100 rounded-lg transition-all duration-300 w-full text-left"
+                  >
+                    <LogOut className="w-5 h-5 text-pink-500" />
+                    <span className="font-body font-medium">Sign Out</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="px-4 space-y-2">
+                  <Link
+                    href="/signin"
+                    className="block w-full bg-blue-500 text-white p-3 rounded-lg text-center hover:bg-blue-600 transition duration-300"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="block w-full bg-green-500 text-white p-3 rounded-lg text-center hover:bg-green-600 transition duration-300"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         )}

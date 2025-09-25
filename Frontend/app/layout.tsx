@@ -4,7 +4,12 @@ import { Fredoka as Fredoka_One, Poppins } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Suspense } from "react";
 import Navigation from "@/components/navigation";
+import { AuthProvider } from "@/lib/auth-context";
 import "./globals.css";
+
+// Import the voice control components
+import { VoiceControlProvider } from "@/context/VoiceControlContext";
+import GlobalVoiceControl from "@/components/GlobalVoiceControl";
 
 const fredokaOne = Fredoka_One({
   weight: "400",
@@ -25,35 +30,34 @@ export const metadata: Metadata = {
   generator: "v0.app",
 };
 
+// This is the single, correct RootLayout component
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // Client-side auth guard: if no token cookie, redirect to loginF app
-  // This is a light-weight guard to avoid showing protected pages to logged out users
-  if (typeof window !== "undefined") {
-    try {
-      const hasToken = document.cookie.split(";").some((c) => c.trim().startsWith("token="));
-      if (!hasToken && window.location.pathname !== "/auth") {
-        window.location.href = "http://localhost:5173/signin";
-      }
-    } catch (err) {
-      // no-op
-    }
-  }
   return (
     <html lang="en">
       <body
         className={`font-sans ${fredokaOne.variable} ${poppins.variable} antialiased`}
       >
-        {/* Navbar (fixed at top) */}
-        <Navigation />
+        <AuthProvider>
+          {/* 1. VoiceControlProvider wraps everything inside the AuthProvider */}
+          <VoiceControlProvider>
+            {/* Your team's existing navigation */}
+            <Navigation />
 
-        {/* Content with padding to prevent overlap */}
-        <main className="pt-16 relative z-0">
-          <Suspense fallback={null}>{children}</Suspense>
-        </main>
+            {/* Your team's existing main content area */}
+            <main className="pt-16 relative z-0">
+              <Suspense fallback={null}>{children}</Suspense>
+            </main>
+            
+            {/* 2. The floating microphone button is placed here */}
+            {/* It's inside the Provider but outside the main content flow */}
+            <GlobalVoiceControl />
+
+          </VoiceControlProvider>
+        </AuthProvider>
 
         <Analytics />
       </body>
