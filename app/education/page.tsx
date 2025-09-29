@@ -5,9 +5,12 @@ import FlipbookViewer from "@/components/flipbook-viewer"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from 'next/link';
+import ProtectedRoute from "@/components/ProtectedRoute";
+
 export default function EducationPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 relative overflow-hidden">
+    <ProtectedRoute>
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 relative overflow-hidden">
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         {[
           { icon: "🎨", delay: "0s", color: "text-coral-pink" },
@@ -130,5 +133,6 @@ export default function EducationPage() {
         <EducationDashboard />
       </div>
     </div>
+    </ProtectedRoute>
   )
 }

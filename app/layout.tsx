@@ -11,6 +11,9 @@ import "./globals.css";
 import { VoiceControlProvider } from "@/context/VoiceControlContext";
 import GlobalVoiceControl from "@/components/GlobalVoiceControl";
 
+// 2. ADDED: Import authentication provider
+import { AuthProvider } from "@/context/AuthContext";
+
 const fredokaOne = Fredoka_One({
   weight: "400",
   subsets: ["latin"],
@@ -41,20 +44,23 @@ export default function RootLayout({
       <body
         className={`font-sans ${fredokaOne.variable} ${poppins.variable} antialiased`}
       >
-        {/* 2. WRAPPED: The VoiceControlProvider now wraps the main application content */}
-        <VoiceControlProvider>
-          {/* Your team's existing code is untouched inside the provider */}
-          <Navigation />
+        {/* 3. WRAPPED: The AuthProvider wraps the entire application */}
+        <AuthProvider>
+          {/* 2. WRAPPED: The VoiceControlProvider now wraps the main application content */}
+          <VoiceControlProvider>
+            {/* Your team's existing code is untouched inside the provider */}
+            <Navigation />
 
-          <main className="pt-16 relative z-0">
-            <Suspense fallback={null}>{children}</Suspense>
-          </main>
-          
-          {/* 3. ADDED: The floating microphone button, which will appear on all pages */}
-          <GlobalVoiceControl />
-        </VoiceControlProvider>
+            <main className="pt-16 relative z-0">
+              <Suspense fallback={null}>{children}</Suspense>
+            </main>
+            
+            {/* 3. ADDED: The floating microphone button, which will appear on all pages */}
+            <GlobalVoiceControl />
+          </VoiceControlProvider>
+        </AuthProvider>
         
-        {/* These components are outside the voice provider, which is perfectly fine */}
+        {/* These components are outside the providers, which is perfectly fine */}
         <Analytics />
         <TawkWidget />
       </body>

@@ -7,12 +7,26 @@ import { Button } from "@/components/ui/button"
 import AchievementBadge from "./achievement-badge"
 import ProgressChart from "./progress-chart"
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LearnerProfile() {
   const [activeTab, setActiveTab] = useState("overview")
+  const { user, logout } = useAuth()
+
+  // Show loading state if user data is not yet loaded
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="auth-loading mx-auto mb-4"></div>
+          <p className="font-body text-lg text-gray-600">Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
 
   const learnerData = {
-    name: "Learning Explorer",
+    name: user.name,
     age: 8,
     joinDate: "March 2024",
     totalStars: 47,

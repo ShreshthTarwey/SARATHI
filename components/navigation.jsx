@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { Sparkles, Menu, X, User, Settings, Bell } from "lucide-react";
+import { Sparkles, Menu, X, User, Settings, Bell, LogOut } from "lucide-react";
 import { useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   const navLinks = [
     { href: "/communication", label: "Communication", icon: "💬" },
@@ -45,18 +47,38 @@ export default function Navigation() {
 
           <div className="hidden md:block relative">
             <div className="flex items-center space-x-3">
-              <Link
-                href="/profile"
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
-              >
-                Profile
-              </Link>
-              <Link
-                href="/settings"
-                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300"
-              >
-                Settings
-              </Link>
+              {user ? (
+                <>
+                  <Link
+                    href="/profile"
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={logout}
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 flex items-center space-x-2"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    <span>Logout</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/auth/login"
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/auth/signup"
+                    className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition duration-300"
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </div>
           </div>
 
@@ -91,32 +113,47 @@ export default function Navigation() {
               <hr className="mx-4 border-gray-200" />
 
               <div className="px-4 space-y-2">
-                <Link
-                  href="/profile"
-                  className="flex items-center space-x-3 px-2 py-2 text-gray-700 hover:bg-blue-100 rounded-lg transition-all duration-300"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <User className="w-5 h-5 text-blue-500" />
-                  <span className="font-body font-medium">My Profile</span>
-                </Link>
-
-                <Link
-                  href="/settings"
-                  className="flex items-center space-x-3 px-2 py-2 text-gray-700 hover:bg-green-100 rounded-lg transition-all duration-300"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <Settings className="w-5 h-5 text-green-500" />
-                  <span className="font-body font-medium">Settings</span>
-                </Link>
-
-                <Link
-                  href="/notifications"
-                  className="flex items-center space-x-3 px-2 py-2 text-gray-700 hover:bg-yellow-100 rounded-lg transition-all duration-300"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <Bell className="w-5 h-5 text-yellow-500" />
-                  <span className="font-body font-medium">Notifications</span>
-                </Link>
+                {user ? (
+                  <>
+                    <Link
+                      href="/profile"
+                      className="flex items-center space-x-3 px-2 py-2 text-gray-700 hover:bg-blue-100 rounded-lg transition-all duration-300"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <User className="w-5 h-5 text-blue-500" />
+                      <span className="font-body font-medium">My Profile</span>
+                    </Link>
+                    <button
+                      onClick={() => {
+                        logout();
+                        setIsMenuOpen(false);
+                      }}
+                      className="flex items-center space-x-3 px-2 py-2 text-gray-700 hover:bg-red-100 rounded-lg transition-all duration-300 w-full text-left"
+                    >
+                      <LogOut className="w-5 h-5 text-red-500" />
+                      <span className="font-body font-medium">Logout</span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/auth/login"
+                      className="flex items-center space-x-3 px-2 py-2 text-gray-700 hover:bg-blue-100 rounded-lg transition-all duration-300"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <User className="w-5 h-5 text-blue-500" />
+                      <span className="font-body font-medium">Login</span>
+                    </Link>
+                    <Link
+                      href="/auth/signup"
+                      className="flex items-center space-x-3 px-2 py-2 text-gray-700 hover:bg-green-100 rounded-lg transition-all duration-300"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <Settings className="w-5 h-5 text-green-500" />
+                      <span className="font-body font-medium">Sign Up</span>
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
