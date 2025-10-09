@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { Suspense } from "react";
 import Navigation from "@/components/navigation";
 import TawkWidget from "@/components/website-widgets";
+import GlobalTTSAnnouncer from "@/components/global-tts-announcer";
 import "./globals.css";
 
 // 1. ADDED: Import your voice control components
@@ -30,7 +31,6 @@ export const metadata: Metadata = {
   title: "SARATHI - Inclusive Learning Platform",
   description:
     "A vibrant, playful platform for inclusive communication and learning",
-  generator: "v0.app",
 };
 
 export default function RootLayout({
@@ -50,16 +50,16 @@ export default function RootLayout({
           <VoiceControlProvider>
             {/* Your team's existing code is untouched inside the provider */}
             <Navigation />
-
+            <GlobalTTSAnnouncer />
             <main className="pt-16 relative z-0">
               <Suspense fallback={null}>{children}</Suspense>
             </main>
-            
+
             {/* 3. ADDED: The floating microphone button, which will appear on all pages */}
             <GlobalVoiceControl />
           </VoiceControlProvider>
         </AuthProvider>
-        
+
         {/* These components are outside the providers, which is perfectly fine */}
         <Analytics />
         <TawkWidget />
