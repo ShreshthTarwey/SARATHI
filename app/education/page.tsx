@@ -86,7 +86,6 @@ export default function EducationPage() {
               </div>
             </CardContent>
           </Card>
-
           <Card className="max-w-4xl mx-auto bg-gradient-playful-pink border-2 border-primary/30 mb-12 game-card-3d animate-scale-in">
             <CardHeader>
               <CardTitle className="font-heading text-4xl text-white flex items-center justify-center">
@@ -134,5 +133,6 @@ export default function EducationPage() {
       </div>
     </div>
     </ProtectedRoute>
+    
   )
 }

@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
 import Link from 'next/link';
+import BrailleInput from '@/components/BrailleInput';
+
 
 export default function CommunicationInterface() {
   const [activeFeature, setActiveFeature] = useState(null)
@@ -144,6 +146,8 @@ export default function CommunicationInterface() {
   }
 
   return (
+              // <BrailleInput />
+    
     <div className="min-h-screen bg-gradient-communication relative overflow-hidden">
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full animate-float-object-1 opacity-20 blur-xl"></div>
