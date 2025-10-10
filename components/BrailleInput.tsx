@@ -1,30 +1,25 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { CornerDownLeft, Delete, XCircle } from 'lucide-react'; // 1. ADDED: Icons for clarity
 
 // A map for the dot positions and their corresponding numbers/keys
 const dotMap = [
-    { id: 1, key: 'Numpad7' },
-    { id: 4, key: 'Numpad9' },
-    { id: 2, key: 'Numpad4' },
-    { id: 5, key: 'Numpad6' },
-    { id: 3, key: 'Numpad1' },
-    { id: 6, key: 'Numpad3' },
+    { id: 1, key: 'Numpad7' }, { id: 4, key: 'Numpad9' },
+    { id: 2, key: 'Numpad4' }, { id: 5, key: 'Numpad6' },
+    { id: 3, key: 'Numpad1' }, { id: 6, key: 'Numpad3' },
 ];
 
-// 1. ADDED: The Braille to English character map
 const brailleMap: { [key: string]: string } = {
-    '1': 'a', '12': 'b', '14': 'c', '145': 'd', '15': 'e',
-    '124': 'f', '1245': 'g', '125': 'h', '24': 'i', '245': 'j',
-    '13': 'k', '123': 'l', '134': 'm', '1345': 'n', '135': 'o',
-    '1234': 'p', '12345': 'q', '1235': 'r', '234': 's', '2345': 't',
+    '1': 'a', '12': 'b', '14': 'c', '145': 'd', '15': 'e', '124': 'f', '1245': 'g', 
+    '125': 'h', '24': 'i', '245': 'j', '13': 'k', '123': 'l', '134': 'm', '1345': 'n', 
+    '135': 'o', '1234': 'p', '12345': 'q', '1235': 'r', '234': 's', '2345': 't', 
     '136': 'u', '1236': 'v', '2456': 'w', '1346': 'x', '13456': 'y', '1356': 'z',
 };
 
-// Helper function to speak text aloud
 const speak = (text: string) => {
     if ('speechSynthesis' in window) {
-        speechSynthesis.cancel(); // Stop any previous speech
+        speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.rate = 0.9;
         utterance.pitch = 1.2;
@@ -39,16 +34,38 @@ export default function BrailleInput() {
     const toggleDot = (dotId: number) => {
         setActiveDots(prevDots => {
             const newDots = new Set(prevDots);
-            if (newDots.has(dotId)) {
-                newDots.delete(dotId);
-            } else {
-                newDots.add(dotId);
-            }
+            newDots.has(dotId) ? newDots.delete(dotId) : newDots.add(dotId);
             return newDots;
         });
     };
 
-    // 2. UPDATED: Effect now handles Spacebar and Enter keys
+    // 2. REFACTORED: Logic for entering a character is now its own function
+    const handleCharacterEntry = () => {
+        if (activeDots.size === 0) {
+            setOutputText(prev => prev + ' ');
+            speak('space');
+            return;
+        }
+        const brailleKey = Array.from(activeDots).sort((a, b) => a - b).join('');
+        const character = brailleMap[brailleKey];
+
+        if (character) {
+            setOutputText(prev => prev + character);
+            speak(character);
+        } else {
+            speak('unknown');
+        }
+        setActiveDots(new Set());
+    };
+
+    // 3. ADDED: Logic for deleting the last character
+    const handleBackspace = () => {
+        if (outputText.length > 0) {
+            setOutputText(prev => prev.slice(0, -1));
+            // Optional: speak("deleted") or something similar
+        }
+    };
+
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             const dot = dotMap.find(d => d.key === event.code);
@@ -56,46 +73,24 @@ export default function BrailleInput() {
                 event.preventDefault();
                 toggleDot(dot.id);
             }
-
-            // --- CHARACTER COMPLETION LOGIC ---
             if (event.code === 'Space') {
                 event.preventDefault();
-                if (activeDots.size === 0) {
-                    // If space is pressed with no dots active, add a space
-                    setOutputText(prev => prev + ' ');
-                    speak('space');
-                    return;
-                }
-
-                // Create the key for the brailleMap
-                const brailleKey = Array.from(activeDots).sort().join('');
-                const character = brailleMap[brailleKey];
-
-                if (character) {
-                    setOutputText(prev => prev + character);
-                    speak(character); // Speak the single character
-                } else {
-                    speak('unknown character'); // Feedback for invalid combo
-                }
-                
-                // Reset dots for the next character
-                setActiveDots(new Set());
+                handleCharacterEntry();
             }
-
-            // --- SENTENCE COMPLETION LOGIC ---
             if (event.code === 'Enter') {
                 event.preventDefault();
-                if (outputText.trim().length > 0) {
-                    speak(outputText); // Speak the entire sentence
-                }
+                if (outputText.trim().length > 0) speak(outputText);
+            }
+            // ADDED: Backspace key support
+            if (event.code === 'Backspace') {
+                event.preventDefault();
+                handleBackspace();
             }
         };
 
         window.addEventListener('keydown', handleKeyDown);
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-        };
-    }, [activeDots, outputText]); // Rerun effect if state changes
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [activeDots, outputText]);
 
     return (
         <div className="bg-slate-50 p-4 sm:p-8 rounded-2xl max-w-2xl mx-auto shadow-lg">
@@ -104,11 +99,8 @@ export default function BrailleInput() {
                 <p className="text-slate-500 mt-1">Use Numpad keys to select dots. Press **Spacebar** to type a letter and **Enter** to hear the full text.</p>
             </div>
             
-            <div className="flex justify-center items-center gap-8">
-                <div 
-                    className="grid grid-cols-2 gap-x-6 gap-y-4 p-6 bg-slate-200 rounded-xl"
-                    aria-label="Braille input grid"
-                >
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-8">
+                <div className="grid grid-cols-2 gap-x-6 gap-y-4 p-6 bg-slate-200 rounded-xl" aria-label="Braille input grid">
                     {dotMap.map(dot => {
                         const isActive = activeDots.has(dot.id);
                         return (
@@ -116,24 +108,37 @@ export default function BrailleInput() {
                                 key={dot.id}
                                 title={`Dot ${dot.id}`}
                                 onClick={() => toggleDot(dot.id)}
-                                className={`h-20 w-20 rounded-full transition-all duration-150 flex items-center justify-center text-2xl font-bold cursor-pointer
-                                    ${isActive 
-                                        ? 'bg-blue-500 text-white shadow-lg scale-105' 
-                                        : 'bg-slate-400 text-white opacity-50 hover:opacity-100'
-                                    }`
-                                }
+                                className={`h-20 w-20 rounded-full transition-all duration-150 flex items-center justify-center text-2xl font-bold cursor-pointer select-none ${
+                                    isActive ? 'bg-blue-500 text-white shadow-lg scale-105' : 'bg-slate-400 text-white opacity-50 hover:opacity-100'
+                                }`}
                             >
                                 {dot.id}
                             </div>
                         );
                     })}
                 </div>
+
+                {/* 4. ADDED: On-screen controls for mobile/touch users */}
+                <div className="flex flex-col gap-4 w-full sm:w-auto">
+                    <button onClick={handleCharacterEntry} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 active:scale-95 transition-all">
+                        <CornerDownLeft size={20} /> Enter Letter
+                    </button>
+                    <button onClick={handleBackspace} className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 active:scale-95 transition-all">
+                        <Delete size={20} /> Backspace
+                    </button>
+                </div>
             </div>
 
             <div className="mt-8">
-                <label htmlFor="braille-output" className="block text-lg font-semibold text-slate-700 mb-2">
-                    Translated Text
-                </label>
+                <div className="flex justify-between items-center mb-2">
+                    <label htmlFor="braille-output" className="block text-lg font-semibold text-slate-700">
+                        Translated Text
+                    </label>
+                    {/* 5. ADDED: Clear Text button */}
+                    <button onClick={() => { setOutputText(""); speak("Text cleared."); }} className="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-700 font-medium transition-colors">
+                        <XCircle size={16} /> Clear All
+                    </button>
+                </div>
                 <textarea
                     id="braille-output"
                     readOnly
@@ -145,3 +150,4 @@ export default function BrailleInput() {
         </div>
     );
 }
+

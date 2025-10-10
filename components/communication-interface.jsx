@@ -40,6 +40,17 @@ export default function CommunicationInterface() {
       link: "https://shivammodi001.github.io/Picture-Communication/ "
     },
     {
+      id: "braille-keyboard",
+      title: "Braille Keyboard",
+      icon: "Braille", // Using a placeholder word, you can replace with an emoji or icon component
+      description: "Type using a virtual Braille keyboard with tactile and audio feedback.",
+      longDescription: "Practice and type in Braille using your keyboard or by tapping the screen. Instant audio and text feedback for each character.",
+      color: "from-gray-400 via-gray-500 to-gray-600",
+      bgColor: "bg-gradient-to-br from-gray-50 to-gray-100",
+      iconBg: "bg-gradient-to-r from-gray-500 to-gray-700",
+      link: "/braille" // This internal link is the key!
+    },
+    {
       id: "video-messaging",
       title: "Video Messages",
       icon: "📹",
@@ -97,6 +108,18 @@ export default function CommunicationInterface() {
       bgColor: "bg-gradient-to-br from-lime-50 to-green-50",
       iconBg: "bg-gradient-to-r from-lime-400 to-green-500",
     },
+    {
+      id: "Braillllll",
+      title: "Speech to Symbol",
+      icon: "🗣️",
+      description: "Speak naturally and see your words converted to visual symbols",
+      longDescription:
+        "Revolutionary technology that transforms spoken language into meaningful symbol sequences for visual learners.",
+      color: "from-lime-400 via-green-400 to-emerald-600",
+      bgColor: "bg-gradient-to-br from-lime-50 to-green-50",
+      iconBg: "bg-gradient-to-r from-lime-400 to-green-500",
+      component: "https://multi-language-translator-nine.vercel.app/"
+    }
   ]
 
   const communicationIcons = [
@@ -146,8 +169,8 @@ export default function CommunicationInterface() {
   }
 
   return (
-              // <BrailleInput />
-    
+    // <BrailleInput />
+
     <div className="min-h-screen bg-gradient-communication relative overflow-hidden">
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-20 right-20 w-32 h-32 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full animate-float-object-1 opacity-20 blur-xl"></div>
@@ -177,8 +200,7 @@ export default function CommunicationInterface() {
             }}
           >
             <div
-              className={`w-3 h-3 rounded-full ${
-                i % 8 === 0
+              className={`w-3 h-3 rounded-full ${i % 8 === 0
                   ? "bg-purple-400"
                   : i % 8 === 1
                     ? "bg-cyan-400"
@@ -193,7 +215,7 @@ export default function CommunicationInterface() {
                             : i % 8 === 6
                               ? "bg-amber-400"
                               : "bg-lime-400"
-              }`}
+                }`}
             ></div>
           </div>
         ))}
@@ -216,9 +238,8 @@ export default function CommunicationInterface() {
           {communicationFeatures.map((feature, index) => (
             <Card
               key={feature.id}
-              className={`group cursor-pointer transition-all duration-500 hover:scale-105 hover:-translate-y-2 ${
-                activeFeature === feature.id ? "ring-4 ring-purple-400/50 shadow-2xl" : "hover:shadow-xl"
-              } bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl overflow-hidden animate-fade-in-up`}
+              className={`group cursor-pointer transition-all duration-500 hover:scale-105 hover:-translate-y-2 ${activeFeature === feature.id ? "ring-4 ring-purple-400/50 shadow-2xl" : "hover:shadow-xl"
+                } bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl overflow-hidden animate-fade-in-up`}
               style={{ animationDelay: `${index * 0.1}s` }}
               onClick={() => handleFeatureClick(feature.id)}
             >
@@ -246,9 +267,8 @@ export default function CommunicationInterface() {
                   {feature.description}
                 </p>
                 <div
-                  className={`transition-all duration-500 overflow-hidden ${
-                    activeFeature === feature.id ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
-                  }`}
+                  className={`transition-all duration-500 overflow-hidden ${activeFeature === feature.id ? "max-h-40 opacity-100" : "max-h-0 opacity-0"
+                    }`}
                 >
                   <div className="pt-4 border-t border-white/20">
                     <p className="font-body text-xs text-foreground/60 leading-relaxed mb-3">
