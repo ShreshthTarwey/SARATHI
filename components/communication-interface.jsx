@@ -25,7 +25,7 @@ export default function CommunicationInterface() {
       color: "from-blue-500 via-purple-500 to-indigo-600",
       bgColor: "bg-gradient-to-br from-blue-50 to-purple-50",
       iconBg: "bg-gradient-to-r from-blue-500 to-indigo-500",
-      link: "https://sachinburnwal22.github.io/DeafBlind/"
+      link: "https://deaf-blind.vercel.app/"
     },
     {
       id: "picture-board",
@@ -37,7 +37,7 @@ export default function CommunicationInterface() {
       color: "from-emerald-400 via-teal-400 to-cyan-600",
       bgColor: "bg-gradient-to-br from-emerald-50 to-teal-50",
       iconBg: "bg-gradient-to-r from-emerald-400 to-teal-500",
-      link: "https://shivammodi001.github.io/Picture-Communication/ "
+      link: "https://picture-communication.vercel.app/"
     },
     {
       id: "braille-keyboard",
